@@ -1,0 +1,75 @@
+#include <stdio.h>
+
+int cost[10][10], visited[10], n, mincost = 0;
+
+int least(int c);   // function declaration
+
+void tsp(int city)
+{
+    int nextcity;
+
+    visited[city] = 1;
+    printf("%d -> ", city);
+
+    nextcity = least(city);
+
+    if(nextcity == 999)
+    {
+        nextcity = 0;
+        printf("%d", nextcity);
+        mincost += cost[city][nextcity];
+        return;
+    }
+
+    tsp(nextcity);
+}
+
+int least(int c)
+{
+    int i, nc = 999;
+    int min = 999, kmin = 0;
+
+    for(i = 0; i < n; i++)
+    {
+        if(cost[c][i] != 0 && visited[i] == 0)
+        {
+            if(cost[c][i] + cost[i][c] < min)
+            {
+                min = cost[c][i] + cost[i][c];
+                kmin = cost[c][i];
+                nc = i;
+            }
+        }
+    }
+
+    if(min != 999)
+        mincost += kmin;
+
+    return nc;
+}
+
+int main()
+{
+    int i, j;
+
+    printf("Enter number of cities: ");
+    scanf("%d", &n);
+
+    printf("Enter cost matrix:\n");
+
+    for(i = 0; i < n; i++)
+    {
+        visited[i] = 0;
+        for(j = 0; j < n; j++)
+        {
+            scanf("%d", &cost[i][j]);
+        }
+    }
+
+    printf("Path: ");
+    tsp(0);
+
+    printf("\nMinimum cost: %d", mincost);
+
+    return 0;
+}
